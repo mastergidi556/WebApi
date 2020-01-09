@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using WebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Services;
-using System.Web.Http.Cors;
+using Microsoft.AspNetCore.Mvc.Cors;
 
 namespace WebApi
 {

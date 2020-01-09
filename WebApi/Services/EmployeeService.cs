@@ -63,6 +63,7 @@ namespace WebApi.Services
         {
             var employee = this.Get(id);
             _context.Employee.Remove(employee);
+            _context.SaveChanges();
         }
 
     }
