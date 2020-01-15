@@ -9,20 +9,19 @@ namespace WebApi.Models
 {
     public class Employee
     {
-        [Required]
+        [Required(ErrorMessage = "Employee iD is required")]
         public long EmployeeID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Employee name is required")]
         public string EmployeeName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Employee department  is required")]
         public string Department { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Employee email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email")]
         public string MailID { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Date is required")]
         public DateTime? Dob { get; set; }
 
     }

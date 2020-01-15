@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using WebApi.Models;
 
 namespace WebApi.Data
 {
-    public class WebApiContext : DbContext
+    public class WebApiContext : IdentityDbContext
     {
         public WebApiContext(DbContextOptions<WebApiContext> options) : base(options)
         {

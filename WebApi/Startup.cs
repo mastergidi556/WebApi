@@ -14,6 +14,7 @@ using WebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Services;
 using Microsoft.AspNetCore.Mvc.Cors;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApi
 {
@@ -37,6 +38,10 @@ namespace WebApi
 
             services.AddDbContext<WebApiContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("WebApiContext")));
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<WebApiContext>();
+
 
             services.AddTransient<DepartmentService>();
             services.AddTransient<EmployeeService>();
