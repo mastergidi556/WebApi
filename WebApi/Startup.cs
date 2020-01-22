@@ -15,6 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Services;
 using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebApi
 {
@@ -39,12 +42,35 @@ namespace WebApi
             services.AddDbContext<WebApiContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("WebApiContext")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<WebApiContext>();
+
+            //Add Identity Service
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<WebApiContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["AuthSettings:Audience"],
+                    ValidIssuer = Configuration["AuthSettings:Issuer"],
+                    RequireExpirationTime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Key"])),
+                    ValidateIssuerSigningKey = true,
+                };
+            });
 
 
             services.AddTransient<DepartmentService>();
             services.AddTransient<EmployeeService>();
+            services.AddTransient<UserService>();
 
             services.AddCors(options =>
             {
@@ -54,8 +80,6 @@ namespace WebApi
                     builder.WithOrigins("http://localhost:3000")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
-
-
                 });
             });
 
@@ -74,6 +98,8 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
